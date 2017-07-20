@@ -109,9 +109,17 @@ lc_types
 pasture <- mask(nlcd, nlcd == 81, maskvalue = FALSE)
 plot(pasture)
 
-nlcd_agg <- ...(nlcd, ..., ...)
-...
+nlcd[1, 1] ##gets raster cell value##
+
+nlcd_agg <- aggregate(nlcd, fact = 25, fun = modal)
+res(nlcd) ##check unmodified resolution##
+res(nlcd_agg) ##check modified resolution##
 plot(nlcd_agg)
+plot(nlcd)
+##nlcd_agg@legend<- nlcd@legend
+
+
+freq(nlcd_agg)
 
 ## Exercise 3
 
@@ -119,19 +127,21 @@ plot(nlcd_agg)
 
 ## Mixing rasters and vectors: prelude
 
-sesync <- as(..., "Spatial")
-huc_md <- as(..., "Spatial")
-counties_md <- ...
+sesync <- as(sesync, "Spatial") ##changing sf object to sp object##
+
+huc_md <- as(huc_md, "Spatial") ##changing sf object to sp object##
+counties_md <- as(counties_md, 'Spatial')##changing sf object to sp object##
 
 ## Mixing rasters and vectors
 
 plot(nlcd)
-plot(sesync, col = 'green', pch = 16, cex = 2, ...)
+plot(sesync, col = 'green', pch = 16, cex = 2, add=T)
 
-sesync_lc <- ...(nlcd, sesync)
+sesync_lc <- extract(nlcd, sesync)
 
-county_nlcd <- ...
+sesync_lc ##the extracted object ends up being numeric because it is a single point##
 
-modal_lc <- extract(...)
-... <- lc_types[modal_lc + 1]
+## county_nlcd <- extract(nlcd_agg, counties_md)
+
+##modal_lc <- extract(nlcd, huc_md, fun=modal)
 
